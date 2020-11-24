@@ -20,7 +20,7 @@ resource "null_resource" "container_exporter" {
 
   provisioner "file" {
     source      = "${path.module}/scripts/config.yml"
-    destination = "/home/${var.user}/jmx/config.yml"
+    destination = "/home/${var.user}/config.yml"
   }
 
   provisioner "remote-exec" {

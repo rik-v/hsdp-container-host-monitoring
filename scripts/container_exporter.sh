@@ -1,8 +1,8 @@
 host=$1
+mkdir -p jmx
+mv config.yml ./jmx
 docker rm -fv jmx_exporter
 docker volume rm jmx_exporter
-#docker rm -fv merge_exporter
-#docker rm -fv node_exporter
 docker volume create --driver local --name jmx_exporter --opt type=none --opt device=`pwd`/jmx --opt o=uid=root,gid=root --opt o=bind
 docker run -d -p 10001:10002 \
 --name jmx_exporter \
