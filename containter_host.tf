@@ -18,6 +18,11 @@ resource "null_resource" "container_exporter" {
     destination = "/home/${var.user}/container_exporter.sh"
   }
 
+  provisioner "file" {
+    source      = "${path.module}/scripts/config.yml"
+    destination = "/home/${var.user}/jmx/config.yml"
+  }
+
   provisioner "remote-exec" {
     # Deploy container exporter for nodes
     inline = [
