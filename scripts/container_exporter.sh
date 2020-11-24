@@ -4,10 +4,10 @@ mv config.yml ./jmx
 docker rm -fv jmx_exporter
 docker volume rm jmx_exporter
 docker volume create --driver local --name jmx_exporter --opt type=none --opt device=`pwd`/jmx --opt o=uid=root,gid=root --opt o=bind
-docker run -d -p 10001:10002 \
+docker run -d -p 10001:5556 \
 --name jmx_exporter \
 -v jmx_exporter:/opt/bitnami/jmx-exporter/example_configs \
-bitnami/jmx-exporter:latest 10002 example_configs/config.yml
+bitnami/jmx-exporter:latest 5556 example_configs/config.yml
 
 #docker run -d --name=cadvisor_exporter --device=/dev/kmsg -p 9102:8080 \
 #-v /:/rootfs:ro -v /var/run:/var/run:ro -v /sys:/sys:ro \
