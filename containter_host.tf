@@ -1,3 +1,11 @@
+data "template_file" "init" {
+  count = length(var.hosts)
+  template = file("${path.module}/scripts/config.yml")
+  vars = {
+    container_name = element(split("-",element(var.hosts, count.index)),0)
+  }
+}
+
 resource "null_resource" "container_exporter" {
   count = length(var.hosts)
 
@@ -19,7 +27,7 @@ resource "null_resource" "container_exporter" {
   }
 
   provisioner "file" {
-    source      = "${path.module}/scripts/config.yml"
+    content      = data.template_file.init[count.index].rendered
     destination = "/home/${var.user}/config.yml"
   }
 
