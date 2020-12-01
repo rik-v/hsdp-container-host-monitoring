@@ -1,5 +1,5 @@
 data "template_file" "config" {
-  count = length(var.hosts)
+  count = length(compact(var.hosts))
   template = file("${path.module}/scripts/config.yml")
   vars = {
     container_name = element(split("-",element(var.hosts, count.index)),0)
@@ -7,7 +7,7 @@ data "template_file" "config" {
 }
 
 data "template_file" "exporter_bash" {
-  count = length(var.hosts)
+  count = length(compact(var.hosts))
   template = file("${path.module}/scripts/container_exporter.sh")
   vars = {
     container_name = element(split("-",element(var.hosts, count.index)),0)
@@ -15,7 +15,7 @@ data "template_file" "exporter_bash" {
 }
 
 resource "null_resource" "container_exporter" {
-  count = length(var.hosts)
+  count = length(compact(var.hosts))
 
   triggers = {
     container_hosts = join(",", var.hosts.*)
