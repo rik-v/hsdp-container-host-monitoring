@@ -1,29 +1,33 @@
+locals{
+  cartel_hosts = compact(var.hosts)
+}
+
 data "template_file" "config" {
-  count = length(compact(var.hosts))
+  count = length(local.cartel_hosts)
   template = file("${path.module}/scripts/config.yml")
   vars = {
-    container_name = element(split("-",element(var.hosts, count.index)),0)
+    container_name = element(split("-",element(local.cartel_hosts, count.index)),0)
   }
 }
 
 data "template_file" "exporter_bash" {
-  count = length(compact(var.hosts))
+  count = length(compact(local.cartel_hosts))
   template = file("${path.module}/scripts/container_exporter.sh")
   vars = {
-    container_name = element(split("-",element(var.hosts, count.index)),0)
+    container_name = element(split("-",element(local.cartel_hosts, count.index)),0)
   }
 }
 
 resource "null_resource" "container_exporter" {
-  count = length(compact(var.hosts))
+  count = length(compact(local.cartel_hosts))
 
   triggers = {
-    container_hosts = join(",", var.hosts.*)
+    container_hosts = join(",", local.cartel_hosts.*)
   }
 
   connection {
     bastion_host = var.bastion_host
-    host         = element(var.hosts, count.index)
+    host         = element(local.cartel_hosts, count.index)
     user         = var.user
     private_key  = file(var.private_key)
     script_path  = "/home/${var.user}/host_container.sh"
@@ -43,7 +47,7 @@ resource "null_resource" "container_exporter" {
     # Deploy container exporter for nodes
     inline = [
       "chmod +x /home/${var.user}/container_exporter.sh",
-      "/home/${var.user}/container_exporter.sh ${element(var.hosts, count.index)}"
+      "/home/${var.user}/container_exporter.sh ${element(local.cartel_hosts, count.index)}"
     ]
   }
 }
