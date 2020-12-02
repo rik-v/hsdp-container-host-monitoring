@@ -1,4 +1,10 @@
 mkdir -p jmx
+container_names=`docker ps --format {{.Names}}`
+arr=($container_names)
+echo "All Container Names : ${arr[*]}"
+echo "Container First Name: ${arr[0]}"
+export container_name=${arr[0]}
+envsubst < config.yml.tmpl > config.yml
 mv config.yml ./jmx
 docker rm -fv jmx_exporter
 docker volume rm jmx_config_volume
