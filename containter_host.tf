@@ -7,6 +7,7 @@ resource "null_resource" "container_exporter" {
 
   triggers = {
     container_hosts = join(",", local.cartel_hosts.*)
+    bash_files = file("${path.module}/scripts/container_exporter.sh")
   }
 
   connection {
@@ -18,12 +19,12 @@ resource "null_resource" "container_exporter" {
   }
 
   provisioner "file" {
-    content     =  "${path.module}/scripts/container_exporter.sh"
+    source      =  "${path.module}/scripts/container_exporter.sh"
     destination = "/home/${var.user}/container_exporter.sh"
   }
 
   provisioner "file" {
-    content      = "${path.module}/scripts/config.yml.tmpl"
+    source      = "${path.module}/scripts/config.yml.tmpl"
     destination = "/home/${var.user}/config.yml.tmpl"
   }
 
