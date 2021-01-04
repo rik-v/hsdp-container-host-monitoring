@@ -15,3 +15,6 @@ docker run -d -p 10001:5556 \
 --name jmx_exporter --link ${container_name} \
 -v jmx_config_volume:/opt/bitnami/jmx-exporter/example_configs \
 bitnami/jmx-exporter:latest 5556 example_configs/config.yml
+
+#---- Run kafka prometheus exporter (https://github.com/danielqsj/kafka_exporter)
+docker run -d -p 9308:9308 danielqsj/kafka-exporter --kafka.server=kafka:9092 --web.telemetry-path=/pmetrics
